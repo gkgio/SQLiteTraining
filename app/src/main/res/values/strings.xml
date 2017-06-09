@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SQLiteTraining</string>
+    <string name="dialog_what_action_animal">Что сделать с животным?</string>
+    <string name="dialog_delete">Удалить</string>
+    <string name="dialog_update">Изменить</string>
+    <string name="dialog_nothing">Ничего</string>
+    <string name="btn_update_animal">Изменить животное</string>
+    <string name="species">Вид</string>
+    <string name="age">Возраст</string>
+    <string name="name">Имя</string>
+    <string name="add_animal">Добавить животное</string>
+</resources>
