@@ -1,6 +1,5 @@
 package com.gkgio.android.sqlitetraining.db;
 
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -86,9 +85,24 @@ public class SQLiteAnimalsDao extends SQLiteOpenHelper
 
     @Override
     public Animal getAnimalById(long id) {
-        throw new UnsupportedOperationException(
-                "Not implemented yet"
-        );
+        Animal animal = null;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_NAME, null, AnimalsContract.Animals._ID + " = ?",
+                    new String[]{String.valueOf(id)}, null, null, null);
+            animal = new Animal();
+            cursor.moveToFirst();
+            if (cursor.isFirst()) {
+                animal = createAnimal(cursor);
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            db.close();
+        }
+        return animal;
     }
 
     @Override
@@ -98,7 +112,8 @@ public class SQLiteAnimalsDao extends SQLiteOpenHelper
         db.beginTransaction();
         try {
             ContentValues values = createValuesFromAnimal(animal);
-            rowCount = db.update(TABLE_NAME, values, AnimalsContract.Animals._ID + " = ?", new String[]{String.valueOf(animal.getId())});
+            rowCount = db.update(TABLE_NAME, values, AnimalsContract.Animals._ID + " = ?",
+                    new String[]{String.valueOf(animal.getId())});
             db.setTransactionSuccessful();
 
         } finally {

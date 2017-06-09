@@ -1,6 +1,5 @@
 package com.gkgio.android.sqlitetraining.db;
 
-
 import com.gkgio.android.sqlitetraining.model.Animal;
 
 import java.util.List;
