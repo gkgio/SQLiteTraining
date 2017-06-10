@@ -14,9 +14,10 @@ import com.gkgio.android.sqlitetraining.AnimalsStorage;
 import com.gkgio.android.sqlitetraining.R;
 import com.gkgio.android.sqlitetraining.app.SQLiteTrainingApplication;
 import com.gkgio.android.sqlitetraining.model.Animal;
-import com.google.gson.Gson;
 
 public class AddOrUpdateAnimalActivity extends AppCompatActivity {
+
+    private static final String INTENT_ANIMAL_PARAM = "Animal";
 
     private AnimalsStorage animalsStorage;
 
@@ -31,11 +32,9 @@ public class AddOrUpdateAnimalActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         animalsStorage = ((SQLiteTrainingApplication) getApplication()).getAnimalsStorage();
-
         setContentView(R.layout.add_or_update_animal_activity);
-        final Gson gson = new Gson();
 
-        animal = gson.fromJson(getIntent().getStringExtra("Animal"), Animal.class);
+        animal = (Animal)getIntent().getSerializableExtra(INTENT_ANIMAL_PARAM);
 
         speciesEditText = (EditText) findViewById(R.id.species_edit_text);
         ageEditText = (EditText) findViewById(R.id.age_edit_text);

@@ -1,10 +1,12 @@
 package com.gkgio.android.sqlitetraining.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +26,7 @@ import java.util.List;
 
 public class AnimalActivity extends AppCompatActivity {
     private static final int ANIMALS_LOADER_ID = 1;
+    private static final String INTENT_ANIMAL_PARAM = "Animal";
 
     private AnimalsStorage animalsStorage;
     private AnimalsAdapter animalsAdapter;
@@ -35,7 +38,7 @@ public class AnimalActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        animalsAdapter = new AnimalsAdapter(this, animalsStorage);
+        animalsAdapter = new AnimalsAdapter(this);
 
         RecyclerView rvAnimals = (RecyclerView) findViewById(R.id.rvAnimals);
         rvAnimals.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
@@ -83,5 +86,31 @@ public class AnimalActivity extends AppCompatActivity {
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openAddORUpdateActivity(final Animal animal) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.dialog_what_action_animal)
+                .setNeutralButton(R.string.dialog_delete, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        animalsStorage.deleteAnimal(animal);
+                        dialog.cancel();
+                    }
+                })
+                .setPositiveButton(R.string.dialog_update, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(AnimalActivity.this, AddOrUpdateAnimalActivity.class);
+                        intent.putExtra(INTENT_ANIMAL_PARAM, animal);
+                        startActivity(intent);
+                        dialog.cancel();
+                    }
+                })
+                .setNegativeButton(R.string.dialog_nothing, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+
+        builder.create().show();
     }
 }

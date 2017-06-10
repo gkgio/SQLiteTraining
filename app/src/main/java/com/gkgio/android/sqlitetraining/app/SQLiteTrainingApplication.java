@@ -16,6 +16,7 @@ public class SQLiteTrainingApplication extends Application {
         AnimalsDao animalsDao = new SQLiteAnimalsDao(this);
         animalsStorage = new AnimalsStorage(animalsDao);
     }
+
     public AnimalsStorage getAnimalsStorage() {
         return animalsStorage;
     }

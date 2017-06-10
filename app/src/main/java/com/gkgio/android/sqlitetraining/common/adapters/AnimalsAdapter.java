@@ -1,21 +1,17 @@
 package com.gkgio.android.sqlitetraining.common.adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.gkgio.android.sqlitetraining.AnimalsStorage;
 import com.gkgio.android.sqlitetraining.R;
 import com.gkgio.android.sqlitetraining.model.Animal;
-import com.gkgio.android.sqlitetraining.ui.AddOrUpdateAnimalActivity;
-import com.google.gson.Gson;
+import com.gkgio.android.sqlitetraining.ui.AnimalActivity;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +21,11 @@ import java.util.List;
 public class AnimalsAdapter extends RecyclerView.Adapter<AnimalsAdapter.CategoryItemViewHolder> {
 
     private final List<Animal> animalList;
-    private final Context context;
-    private AnimalsStorage animalsStorage;
+    private final WeakReference<Context> refContext;
 
-    public AnimalsAdapter(Context context, AnimalsStorage animalsStorage) {
-        this.context = context;
+    public AnimalsAdapter(Context context) {
+        refContext = new WeakReference<>(context);
         animalList = new ArrayList<>();
-        this.animalsStorage = animalsStorage;
     }
 
     @Override
@@ -44,41 +38,20 @@ public class AnimalsAdapter extends RecyclerView.Adapter<AnimalsAdapter.Category
     public void onBindViewHolder(CategoryItemViewHolder holder, int position) {
 
         final Animal animal = animalList.get(position);
+        final Context context = refContext.get();
 
-        holder.speciesTextView.setText(composeString(context, R.string.species, animal.getSpecies()));
-        holder.ageTextView.setText(composeString(context, R.string.age, String.valueOf(animal.getAge())));
-        holder.nameTextView.setText(composeString(context, R.string.name, animal.getName()));
+        if (context != null) {
+            holder.speciesTextView.setText(composeString(context, R.string.species, animal.getSpecies()));
+            holder.ageTextView.setText(composeString(context, R.string.age, String.valueOf(animal.getAge())));
+            holder.nameTextView.setText(composeString(context, R.string.name, animal.getName()));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle(R.string.dialog_what_action_animal)
-                        .setNeutralButton(R.string.dialog_delete, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                animalsStorage.deleteAnimal(animal);
-                                dialog.cancel();
-                            }
-                        })
-                        .setPositiveButton(R.string.dialog_update, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                final Gson gson = new Gson();
-                                Intent intent = new Intent(context, AddOrUpdateAnimalActivity.class);
-                                final String jsonAnimal = gson.toJson(animal, Animal.class);
-                                intent.putExtra("Animal", jsonAnimal);
-                                context.startActivity(intent);
-                                dialog.cancel();
-                            }
-                        })
-                        .setNegativeButton(R.string.dialog_nothing, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                builder.create().show();
-            }
-        });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ((AnimalActivity) context).openAddORUpdateActivity(animal);
+                }
+            });
+        }
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.gkgio.android.sqlitetraining.model;
 
-import com.google.common.base.Objects;
+import java.io.Serializable;
 
-public class Animal {
+public class Animal implements Serializable {
 
     private long id;
     private String species;
@@ -15,36 +15,40 @@ public class Animal {
         this.name = name;
     }
 
-    public Animal() {}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (!(o instanceof Animal)) {
-            return false;
-        }
-        Animal animal = (Animal) o;
-        return id == animal.id &&
-                age == animal.age &&
-                Objects.equal(species, animal.species) &&
-                Objects.equal(name, animal.name);
+    public Animal() {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(id, species, age, name);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Animal animal = (Animal) o;
+
+        if (id != animal.id) return false;
+        if (age != animal.age) return false;
+        if (species != null ? !species.equals(animal.species) : animal.species != null)
+            return false;
+        return name != null ? name.equals(animal.name) : animal.name == null;
     }
 
     @Override
     public String toString() {
-        return Objects.toStringHelper(this)
-                .add("id", id)
-                .add("species", species)
-                .add("age", age)
-                .add("name", name)
-                .toString();
+        return "Animal{" +
+                "id=" + id +
+                ", species='" + species + '\'' +
+                ", age=" + age +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + species.hashCode();
+        result = 31 * result + age;
+        result = 31 * result + name.hashCode();
+        return result;
     }
 
     public long getId() {

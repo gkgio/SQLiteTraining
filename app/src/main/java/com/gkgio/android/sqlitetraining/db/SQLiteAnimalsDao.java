@@ -83,6 +83,7 @@ public class SQLiteAnimalsDao extends SQLiteOpenHelper
         return animals;
     }
 
+    //Не используется
     @Override
     public Animal getAnimalById(long id) {
         Animal animal = null;
@@ -91,11 +92,9 @@ public class SQLiteAnimalsDao extends SQLiteOpenHelper
         try {
             cursor = db.query(TABLE_NAME, null, AnimalsContract.Animals._ID + " = ?",
                     new String[]{String.valueOf(id)}, null, null, null);
-            animal = new Animal();
             cursor.moveToFirst();
-            if (cursor.isFirst()) {
-                animal = createAnimal(cursor);
-            }
+            animal = createAnimal(cursor);
+
         } finally {
             if (cursor != null) {
                 cursor.close();

@@ -42,4 +42,3 @@ public class AnimalsStorage {
         onContentChangeListeners = null;
     }
 }
-

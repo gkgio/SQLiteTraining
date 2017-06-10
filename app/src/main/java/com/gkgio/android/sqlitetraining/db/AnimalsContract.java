@@ -9,6 +9,5 @@ public class AnimalsContract {
         public static final String SPECIES = "species";
         public static final String AGE = "age";
         public static final String NAME = "name";
-
     }
 }
